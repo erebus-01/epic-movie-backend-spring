@@ -16,8 +16,6 @@ public class GenreMapper {
     private Long id;
     private String name;
     private String description;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
 
 
 }

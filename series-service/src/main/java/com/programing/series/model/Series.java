@@ -42,8 +42,14 @@ public class Series {
     @NotNull
     private String backdrop;
 
+    @Column(name = "logo")
+    private String logo;
+
     @Column(name = "age")
     private Integer age;
+
+    @Column(name = "year")
+    private Integer year;
 
     @Column(name = "nation")
     private String nation;
@@ -71,11 +77,20 @@ public class Series {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
-            name = "crew_series",
+            name = "crew_actor",
             joinColumns = @JoinColumn(name = "series_id")
     )
-    @Column(name = "uuid_crew")
-    private List<UUID> crews;
+    @Column(name = "uuid_actor")
+
+    private List<UUID> actors;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "crew_director",
+            joinColumns = @JoinColumn(name = "series_id")
+    )
+    @Column(name = "uuid_director")
+    private List<UUID>directors;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -94,7 +109,10 @@ public class Series {
     private List<UUID> episodes;
 
     @Transient
-    private List<CrewMapper> crewsMapper;
+    private List<CrewMapper> actorsMapper;
+
+    @Transient
+    private List<CrewMapper> directorsMapper;
 
     @Transient
     private List<GenreMapper> genreMapper;

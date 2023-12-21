@@ -1,16 +1,17 @@
 package com.programing.series.service;
 
+import com.programing.series.config.FeignClientCrew;
 import com.programing.series.config.FeignClientEpisodes;
+import com.programing.series.config.FeignClientGenre;
 import com.programing.series.dto.*;
 import com.programing.series.impl.SeriesImpl;
-import com.programing.series.model.EpisodesMapper;
-import com.programing.series.model.Season;
-import com.programing.series.model.Series;
+import com.programing.series.model.*;
 import com.programing.series.repository.SeriesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +24,8 @@ public class SeriesService implements SeriesImpl {
 
     private final SeriesRepository repository;
     private final FeignClientEpisodes clientEpisodes;
+    private final FeignClientGenre clientGenre;
+    private final FeignClientCrew clientCrew;
 
     @Override
     public SeriesResponse save(SeriesRequest request) {
@@ -31,13 +34,16 @@ public class SeriesService implements SeriesImpl {
                 .description(request.getDescription())
                 .image(request.getImage())
                 .backdrop(request.getBackdrop())
+                .logo(request.getLogo())
                 .age(request.getAge())
+                .year(request.getYear())
                 .nation(request.getNation())
                 .releaseDate(request.getReleaseDate())
                 .trailerURL(request.getTrailerURL())
                 .url(request.getUrl())
                 .released(request.isReleased())
-                .crews(request.getCrews())
+                .actors(request.getActors())
+                .directors(request.getDirectors())
                 .episodes(request.getEpisodes())
                 .genres(request.getGenres())
                 .build();
@@ -64,14 +70,17 @@ public class SeriesService implements SeriesImpl {
                     .description(request.getDescription())
                     .image(request.getImage())
                     .backdrop(request.getBackdrop())
+                    .logo(request.getLogo())
                     .age(request.getAge())
+                    .year(request.getYear())
                     .nation(request.getNation())
                     .seasons(request.getSeasons())
                     .releaseDate(request.getReleaseDate())
                     .trailerURL(request.getTrailerURL())
                     .url(request.getUrl())
+                    .actors(request.getActors())
+                    .directors(request.getDirectors())
                     .released(request.isReleased())
-                    .crews(request.getCrews())
                     .genres(request.getGenres())
                     .build();
 
@@ -106,24 +115,31 @@ public class SeriesService implements SeriesImpl {
     }
 
     private SeriesResponse maptoSeriesResponse(Series request) {
+
+        log.info("Genre mapper: {}", convertToGenreMapper(request.getGenres()));
+
         return SeriesResponse.builder()
                 .id(request.getId())
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .image(request.getImage())
                 .backdrop(request.getBackdrop())
+                .logo(request.getLogo())
                 .age(request.getAge())
+                .year(request.getYear())
                 .nation(request.getNation())
                 .seasons(convertSeasonsToDTO(request.getSeasons()))
                 .releaseDate(request.getReleaseDate())
                 .trailerURL(request.getTrailerURL())
                 .url(request.getUrl())
                 .released(request.isReleased())
-                .crews(request.getCrews())
                 .genres(request.getGenres())
                 .episodes(request.getEpisodes())
-                .crewsMapper(request.getCrewsMapper())
-                .genreMapper(request.getGenreMapper())
+                .actors(request.getActors())
+                .actorsMapper(request.getActors() != null && !request.getActors().isEmpty() ? convertToCrewMapper(request.getActors()) : null)
+                .directors(request.getDirectors())
+                .directorsMapper(request.getDirectors() != null && !request.getDirectors().isEmpty() ? convertToCrewMapper(request.getDirectors()) : null)
+                .genreMapper(request.getGenres() != null && !request.getGenres().isEmpty() ? convertToGenreMapper(request.getGenres()) : null)
                 .createAt(request.getCreateAt())
                 .updateAt(request.getUpdateAt())
                 .build();
@@ -143,7 +159,6 @@ public class SeriesService implements SeriesImpl {
         return seasonRequests.stream()
                 .map(seasonRequest -> Season.builder()
                         .seasonNumber(seasonRequest.getSeasonNumber())
-                        .episodeIds(seasonRequest.getEpisodeIds())
                         .series(series)
                         .build())
                 .collect(Collectors.toList());
@@ -152,15 +167,15 @@ public class SeriesService implements SeriesImpl {
     private List<Season> convertSeasonsToDTO(List<Season> seasons) {
         return seasons.stream()
                 .map(season -> {
-                    List<EpisodesMapper> episodesMappers = season.getEpisodeIds().stream()
-                            .map(clientEpisodes::getOne)
-                            .toList();
+//                    List<EpisodesMapper> episodesMappers = season.getEpisodeIds().stream()
+//                            .map(clientEpisodes::getOne)
+//                            .toList();
 
                     return Season.builder()
                             .id(season.getId())
+                            .series(season.getSeries())
                             .seasonNumber(season.getSeasonNumber())
                             .episodeIds(season.getEpisodeIds())
-                            .episodesMappers(episodesMappers)
                             .createAt(season.getCreateAt())
                             .updateAt(season.getUpdateAt())
                             .build();
@@ -168,5 +183,12 @@ public class SeriesService implements SeriesImpl {
                 .collect(Collectors.toList());
     }
 
+    private List<GenreMapper> convertToGenreMapper(List<Long> genreIDs) {
+        return genreIDs.stream().map(clientGenre::getGenreById).toList();
+    }
+
+    private List<CrewMapper> convertToCrewMapper(List<UUID> genreIDs) {
+        return genreIDs.stream().map(clientCrew::findCrewById).toList();
+    }
 
 }

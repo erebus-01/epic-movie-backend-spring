@@ -6,9 +6,11 @@ import com.programing.crew.dto.CrewResponse;
 import com.programing.crew.impl.CrewImplement;
 import com.programing.crew.model.Crew;
 import com.programing.crew.model.MovieMapper;
+import com.programing.crew.model.TypeCrew;
 import com.programing.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -31,7 +33,7 @@ public class CrewService implements CrewImplement {
 
     @Override
     public List<CrewResponse> getAllCrew() {
-        List<Crew> crews = repository.findAll();
+        List<Crew> crews = repository.findAll(Sort.by(Sort.Direction.ASC, "firstname"));
         return crews.stream().map(this::mapToCrewResponse).collect(Collectors.toList());
     }
 
@@ -140,6 +142,23 @@ public class CrewService implements CrewImplement {
 
         return null;
     }
+
+    @Override
+    public List<CrewResponse> findByCrewActor() {
+        List<Crew> crewList = repository.findByTypeCrew(TypeCrew.ACTOR, Sort.by(Sort.Direction.ASC, "firstname"));
+        return crewList.stream()
+                .map(this::mapToCrewResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CrewResponse> findByCrewDirector() {
+        List<Crew> crewList = repository.findByTypeCrew(TypeCrew.DIRECTOR, Sort.by(Sort.Direction.ASC, "firstname"));
+        return crewList.stream()
+                .map(this::mapToCrewResponse)
+                .collect(Collectors.toList());
+    }
+
 
     private CrewResponse mapToCrewResponse(Crew crew)   {
         return CrewResponse.builder()

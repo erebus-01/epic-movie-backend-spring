@@ -4,6 +4,7 @@ import com.programing.crew.dto.CrewRequest;
 import com.programing.crew.dto.CrewResponse;
 import com.programing.crew.model.Crew;
 import com.programing.crew.model.MovieMapper;
+import com.programing.crew.model.TypeCrew;
 import com.programing.crew.service.CrewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @RequestMapping("/api/crew")
 @Slf4j
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,RequestMethod.DELETE})
 public class CrewController {
     private final CrewService service;
 
@@ -40,6 +42,18 @@ public class CrewController {
         return new ResponseEntity<>(crewResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/crew-actor")
+    private ResponseEntity<List<CrewResponse>> findByTypeCrew() {
+        List<CrewResponse> crewResponse = service.findByCrewActor();
+        return new ResponseEntity<>(crewResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/crew-director")
+    private ResponseEntity<List<CrewResponse>> findByTypeDirector() {
+        List<CrewResponse> crewResponse = service.findByCrewDirector();
+        return new ResponseEntity<>(crewResponse, HttpStatus.OK);
+    }
+
 
     @PostMapping()
     private ResponseEntity<Optional<CrewResponse>> save(@RequestBody CrewRequest request) {
@@ -56,6 +70,12 @@ public class CrewController {
     @PutMapping("/{id}")
     private ResponseEntity<CrewResponse> update(@RequestBody CrewRequest request, @PathVariable UUID id) {
         CrewResponse crew = service.update(request, id);
+        return new ResponseEntity<>(crew, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<String> delete(@PathVariable("id") UUID id) {
+        String crew = service.deleteCrewById(id);
         return new ResponseEntity<>(crew, HttpStatus.OK);
     }
 

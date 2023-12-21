@@ -25,17 +25,21 @@ public class SeriesRequest {
     private String description;
     private String image;
     private String backdrop;
+    private String logo;
     private Integer age;
+    private Integer year;
     private String nation;
     private Date releaseDate;
     private String trailerURL;
     private String url;
     private boolean released;
-    private List<UUID> crews;
+    private List<UUID> actors;
+    private List<UUID> directors;
     private List<Long> genres;
     private List<UUID> episodes;
     private List<Season> seasons;
-    private List<CrewMapper> crewsMapper;
+    private List<CrewMapper> actorsMapper;
+    private List<CrewMapper> directorsMapper;
     private List<GenreMapper> genreMapper;
 
 

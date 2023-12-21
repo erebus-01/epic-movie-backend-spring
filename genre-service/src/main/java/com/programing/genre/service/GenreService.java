@@ -9,6 +9,7 @@ import com.programing.genre.model.MovieMapper;
 import com.programing.genre.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public class GenreService implements GenreImpl {
 
     @Override
     public List<GenreResponse> getAll() {
-        List<Genre> genreList = repository.findAll();
+        List<Genre> genreList = repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
         return genreList.stream().map(this::maptoGenreResponse).collect(Collectors.toList());
     }
 
