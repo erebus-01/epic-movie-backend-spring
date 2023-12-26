@@ -3,11 +3,13 @@ package com.programing.series.controller;
 import com.programing.series.dto.SeriesRequest;
 import com.programing.series.dto.SeriesResponse;
 import com.programing.series.service.SeriesService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,8 +36,15 @@ public class SeriesController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ResponseEntity<SeriesResponse> getOne(@PathVariable("id") UUID id) {
         SeriesResponse seriesResponses = service.getOne(id);
+        return new ResponseEntity<>(seriesResponses, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SeriesResponse> update(@PathVariable("id") UUID id, @RequestBody SeriesRequest request) {
+        SeriesResponse seriesResponses = service.update(request, id);
         return new ResponseEntity<>(seriesResponses, HttpStatus.OK);
     }
 

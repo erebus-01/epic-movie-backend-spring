@@ -97,16 +97,16 @@ public class CrewService implements CrewImplement {
     public CrewResponse update(CrewRequest request, UUID id) {
         Optional<Crew> crewOptional = repository.findById(id);
         if(crewOptional.isPresent()) {
-            Crew crew = Crew.builder()
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .dateOfBirth(request.getDateOfBirth())
-                    .nation(request.getNation())
-                    .gender(request.getGender())
-                    .typeCrew(request.getTypeCrew())
-                    .description(request.getDescription())
-                    .image(request.getImage())
-                    .build();
+
+            Crew crew = crewOptional.get();
+            crew.setFirstname(request.getFirstname());
+            crew.setLastname(request.getLastname());
+            crew.setDateOfBirth(request.getDateOfBirth());
+            crew.setNation(request.getNation());
+            crew.setGender(request.getGender());
+            crew.setTypeCrew(request.getTypeCrew());
+            crew.setDescription(request.getDescription());
+            crew.setImage(request.getImage());
 
             repository.save(crew);
 

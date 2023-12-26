@@ -20,7 +20,6 @@ import java.util.UUID;
 @RequestMapping("/api/crew")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,RequestMethod.DELETE})
 public class CrewController {
     private final CrewService service;
 

@@ -32,6 +32,8 @@ public class EpisodeService implements EpisodeImpl {
                 .durations(request.getDurations())
                 .releasedDate(request.getReleasedDate())
                 .seriesId(request.getSeriesIds())
+                .seasonId(request.getSeasonIds())
+                .seriesId(request.getSeriesIds())
                 .url(request.getUrl())
                 .build();
 

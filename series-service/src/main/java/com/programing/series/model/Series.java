@@ -28,7 +28,6 @@ public class Series {
 
 
     @Column(name = "title")
-    @NotNull
     private String title;
 
     @Column(name = "description")

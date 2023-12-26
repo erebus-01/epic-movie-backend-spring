@@ -65,24 +65,23 @@ public class SeriesService implements SeriesImpl {
     public SeriesResponse update(SeriesRequest request, UUID id) {
         Optional<Series> seriesOptional = repository.findById(id);
         if (seriesOptional.isPresent()) {
-            Series series = Series.builder()
-                    .title(request.getTitle())
-                    .description(request.getDescription())
-                    .image(request.getImage())
-                    .backdrop(request.getBackdrop())
-                    .logo(request.getLogo())
-                    .age(request.getAge())
-                    .year(request.getYear())
-                    .nation(request.getNation())
-                    .seasons(request.getSeasons())
-                    .releaseDate(request.getReleaseDate())
-                    .trailerURL(request.getTrailerURL())
-                    .url(request.getUrl())
-                    .actors(request.getActors())
-                    .directors(request.getDirectors())
-                    .released(request.isReleased())
-                    .genres(request.getGenres())
-                    .build();
+            Series series = seriesOptional.get();
+            series.setTitle(request.getTitle());
+            series.setDescription(request.getDescription());
+            series.setImage(request.getImage());
+            series.setBackdrop(request.getBackdrop());
+            series.setLogo(request.getLogo());
+            series.setAge(request.getAge());
+            series.setYear(request.getYear());
+            series.setNation(request.getNation());
+//            series.setSeasons(request.getSeasons());
+            series.setReleaseDate(request.getReleaseDate());
+            series.setTrailerURL(request.getTrailerURL());
+            series.setUrl(request.getUrl());
+            series.setActors(request.getActors());
+            series.setDirectors(request.getDirectors());
+            series.setReleased(request.isReleased());
+            series.setGenres(request.getGenres());
 
             repository.save(series);
 
