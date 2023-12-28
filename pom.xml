@@ -22,7 +22,11 @@
     <module>genre-service</module>
     <module>rating-service</module>
     <module>api-gateway</module>
-    <module>user-security</module>
+    <module>admin-security</module>
+    <module>user-service</module>
+    <module>user-profile-service</module>
+    <module>user-search-service</module>
+    <module>user-watch-service</module>
   </modules>
 
   <properties>

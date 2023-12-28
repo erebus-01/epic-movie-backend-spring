@@ -6,10 +6,12 @@ import com.programing.series.service.SeriesService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/series")
 @RequiredArgsConstructor
+@Slf4j
 @CrossOrigin(origins = "*")
 public class SeriesController {
 
@@ -36,8 +39,10 @@ public class SeriesController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @RolesAllowed("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<SeriesResponse> getOne(@PathVariable("id") UUID id) {
+        log.info("Checking access for user with roles: {}", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         SeriesResponse seriesResponses = service.getOne(id);
         return new ResponseEntity<>(seriesResponses, HttpStatus.OK);
     }
